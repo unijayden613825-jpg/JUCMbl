@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>經典賽管理中心 - 卡比巴拉隊 vs 饅頭隊</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-color: #1e293b;
+            --border-color: #cbd5e1;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 16px;
+        }
+        h1, h2 { text-align: center; color: #0f172a; }
+        .container { max-width: 900px; margin: 0 auto; }
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+        .team-select {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .btn {
+            background: #e2e8f0;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .btn.active {
+            background: var(--primary);
+            color: white;
+        }
+        .roster-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        @media (max-width: 600px) {
+            .roster-grid { grid-template-columns: 1fr; }
+        }
+        .tier-box {
+            background: #f1f5f9;
+            padding: 12px;
+            border-radius: 8px;
+            min-height: 150px;
+        }
+        .tier-box h3 { margin-top: 0; border-bottom: 2px solid var(--border-color); padding-bottom: 6px; }
+        .player-item {
+            background: white;
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 1px 3px rgb(0 0 0 / 0.1);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            text-align: center;
+        }
+        th { background: #e2e8f0; }
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 6px;
+            box-sizing: border-box;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+        }
+        .add-player-form {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>⚾ 經典賽管理中心</h1>
+
+    <!-- 球隊切換按鈕 -->
+    <div class="team-select">
+        <button class="btn active" id="btn-capybara" onclick="switchTeam('卡比巴拉隊')">🦫 卡比巴拉隊</button>
+        <button class="btn" id="btn-mantou" onclick="switchTeam('饅頭隊')">🥟 饅頭隊</button>
+    </div>
+
+    <!-- 球員升降管理區 -->
+    <div class="card">
+        <h2 id="current-team-title">卡比巴拉隊 - 球員升降管理</h2>
+        
+        <div class="roster-grid">
+            <!-- 一軍區 -->
+            <div class="tier-box">
+                <h3>🔥 一軍名單</h3>
+                <div id="tier-1-list"></div>
+            </div>
+            <!-- 二軍區 -->
+            <div class="tier-box">
+                <h3>🌱 二軍名單</h3>
+                <div id="tier-2-list"></div>
+            </div>
+        </div>
+
+        <!-- 新增球員表單 -->
+        <div class="add-player-form">
+            <input type="text" id="new-player-name" placeholder="輸入球員姓名...">
+            <button class="btn" onclick="addPlayer()" style="background: #22c55e; color: white; white-space: nowrap;">新增球員</button>
+        </div>
+    </div>
+
+    <!-- 五場經典賽程表 -->
+    <div class="card">
+        <h2>🏆 五場系列賽賽程與比分</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>場次</th>
+                    <th>對戰組合</th>
+                    <th>比分 (卡比 vs 饅頭)</th>
+                    <th>狀態</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Game 1 開幕戰</td>
+                    <td>卡比巴拉隊 (主) vs 饅頭隊 (客)</td>
+                    <td><input type="text" value="0 - 0" style="text-align:center;"></td>
+                    <td>未開打</td>
+                </tr>
+                <tr>
+                    <td>Game 2</td>
+                    <td>卡比巴拉隊 (主) vs 饅頭隊 (客)</td>
+                    <td><input type="text" value="0 - 0" style="text-align:center;"></td>
+                    <td>未開打</td>
+                </tr>
+                <tr>
+                    <td>Game 3 聽牌戰</td>
+                    <td>饅頭隊 (主) vs 卡比巴拉隊 (客)</td>
+                    <td><input type="text" value="0 - 0" style="text-align:center;"></td>
+                    <td>未開打</td>
+                </tr>
+                <tr>
+                    <td>Game 4 背水一戰</td>
+                    <td>饅頭隊 (主) vs 卡比巴拉隊 (客)</td>
+                    <td><input type="text" value="0 - 0" style="text-align:center;"></td>
+                    <td>未開打</td>
+                </tr>
+                <tr>
+                    <td>Game 5 殊死戰</td>
+                    <td>卡比巴拉隊 (主) vs 饅頭隊 (客)</td>
+                    <td><input type="text" value="0 - 0" style="text-align:center;"></td>
+                    <td>未開打</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    // 預設資料：兩支球隊的球員與一二軍狀態
+    let players = [
+        { id: 1, name: "隊長卡比", team: "卡比巴拉隊", tier: 1 },
+        { id: 2, name: "快腿卡比", team: "卡比巴拉隊", tier: 2 },
+        { id: 3, name: "重炮饅頭", team: "饅頭隊", tier: 1 },
+        { id: 4, name: "新秀饅頭", team: "饅頭隊", tier: 2 }
+    ];
+
+    let activeTeam = "卡比巴拉隊";
+
+    function switchTeam(teamName) {
+        activeTeam = teamName;
+        document.getElementById('btn-capybara').classList.toggle('active', teamName === '卡比巴拉隊');
+        document.getElementById('btn-mantou').classList.toggle('active', teamName === '饅頭隊');
+        document.getElementById('current-team-title').innerText = `${teamName} - 球員升降管理`;
+        renderPlayers();
+    }
+
+    function renderPlayers() {
+        const t1List = document.getElementById('tier-1-list');
+        const t2List = document.getElementById('tier-2-list');
+        t1List.innerHTML = '';
+        t2List.innerHTML = '';
+
+        const filtered = players.filter(p => p.team === activeTeam);
+
+        filtered.forEach(player => {
+            const div = document.createElement('div');
+            div.className = 'player-item';
+            
+            if (player.tier === 1) {
+                div.innerHTML = `
+                    <span>${player.name}</span>
+                    <button class="btn" style="padding: 4px 8px; font-size: 12px;" onclick="toggleTier(${player.id})">降二軍 ⬇️</button>
+                `;
+                t1List.appendChild(div);
+            } else {
+                div.innerHTML = `
+                    <span>${player.name}</span>
+                    <button class="btn" style="padding: 4px 8px; font-size: 12px; background: #3b82f6; color:white;" onclick="toggleTier(${player.id})">升一軍 ⬆️</button>
+                `;
+                t2List.appendChild(div);
+            }
+        });
+    }
+
+    function toggleTier(id) {
+        const player = players.find(p => p.id === id);
+        if (player) {
+            player.tier = player.tier === 1 ? 2 : 1;
+            renderPlayers();
+        }
+    }
+
+    function addPlayer() {
+        const input = document.getElementById('new-player-name');
+        const name = input.value.trim();
+        if (!name) return;
+
+        const newPlayer = {
+            id: Date.now(),
+            name: name,
+            team: activeTeam,
+            tier: 2 // 預設新增在二軍
+        };
+
+        players.push(newPlayer);
+        input.value = '';
+        renderPlayers();
+    }
+
+    // 初始化畫面
+    renderPlayers();
+</script>
+
+</body>
+</html>
